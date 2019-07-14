@@ -10,8 +10,18 @@ OTS_SSL=${OTS_SSL:='true'}
 OTS_COLOR=${OTS_COLOR:='#dd4a22'}
 
 echo "##### Performing vars check #####"
-if [[ -z $OTS_DOMAIN || -z $OTS_MASTER_KEY || -z $OTS_REDIS_USER || -z $OTS_REDIS_HOST || -z $OTS_REDIS_PORT  ]]; then
+if [[ -z $OTS_DOMAIN || -z $OTS_MASTER_KEY || -z $OTS_REDIS_PW || -z $OTS_REDIS_HOST || -z $OTS_REDIS_PORT  ]]; then
   echo "Required variable is not defined!"
+  echo "current configuration: "
+  echo "OTS_DOMAIN = $OTS_DOMAIN"
+  echo "OTS_MASTER_KEY = $OTS_MASTER_KEY"
+  if [[ -z $OTS_REDIS_PW ]]; then
+    echo "OTS_REDIS_PW = <not -set>"
+  else
+    echo "OTS_REDIS_PW = <variable is set>"
+  fi
+  echo "OTS_REDIS_HOST = $OTS_REDIS_HOST"
+  echo "OTS_REDIS_PORT = $OTS_REDIS_PORT"
   exit 1
 else
   echo "All required vars are set."
@@ -53,5 +63,10 @@ if [ ! -z "$OTS_COLOR" ]; then
   sed -i "s/__OTS_BORDER_COLOR/$OTS_COLOR/g" $CSS
 fi
 
-echo "##### Starting OTS #####""
+echo "##### Starting OTS #####"
+if [[ $DEBUG == "true" ]]; then
+  echo "current configuration: "
+  echo $(cat ${CFG})
+fi
+
 exec bundle exec thin -e dev -R config.ru -p 7143 start

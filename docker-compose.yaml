@@ -1,0 +1,26 @@
+version: "3"
+services:
+    app:
+        image: onetimesecret
+        environment:
+          OTS_DOMAIN: localhost
+          OTS_WEB_PORT: 7143
+          OTS_MASTER_KEY: AY8hhxfSpPrvc2NES2Fk7ygHUTRiGtYVe5onmEhQj2ggg45CgNbRcSrm8drAoJ6n
+          OTS_REDIS_PW: secret
+          OTS_REDIS_HOST: redis
+          OTS_REDIS_PORT: 6379
+          OTS_COLOR: "#FAD006"
+          OTS_SSL: "false"
+        build:
+            context: ./
+        depends_on:
+        - redis
+        ports:
+          - 7143:7143
+    redis:
+        image: registry.redhat.io/rhel8/redis-5
+        container_name: redis-5
+        environment:
+            - REDIS_PASSWORD=secret
+        ports:
+          - 6379:6379
